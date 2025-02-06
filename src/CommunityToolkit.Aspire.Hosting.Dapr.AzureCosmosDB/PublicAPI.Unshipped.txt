@@ -1,0 +1,3 @@
+#nullable enable
+Aspire.Hosting.AzureCosmosDBDaprHostingExtensions
+static Aspire.Hosting.AzureCosmosDBDaprHostingExtensions.WithReference(this Aspire.Hosting.ApplicationModel.IResourceBuilder<CommunityToolkit.Aspire.Hosting.Dapr.IDaprComponentResource!>! builder, Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.AzureCosmosDBResource!>! source) -> Aspire.Hosting.ApplicationModel.IResourceBuilder<CommunityToolkit.Aspire.Hosting.Dapr.IDaprComponentResource!>!
