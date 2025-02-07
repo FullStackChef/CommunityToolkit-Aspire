@@ -1,0 +1,131 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "HTTPEndpoint",
+    "type": "object",
+    "properties": {
+        "apiVersion": {
+            "type": "string",
+            "enum": ["dapr.io/v1alpha1"]
+        },
+        "kind": {
+            "type": "string",
+            "enum": ["HTTPEndpoint"]
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": ["name"]
+        },
+        "spec": {
+            "type": "object",
+            "properties": {
+                "baseUrl": {
+                    "type": "string"
+                },
+                "headers": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "value": {
+                                "type": "string"
+                            },
+                            "secretKeyRef": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "key": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["name", "key"]
+                            }
+                        },
+                        "required": ["name"]
+                    }
+                },
+                "clientTLS": {
+                    "type": "object",
+                    "properties": {
+                        "rootCA": {
+                            "type": "object",
+                            "properties": {
+                                "secretKeyRef": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "key": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["name", "key"]
+                                }
+                            }
+                        },
+                        "certificate": {
+                            "type": "object",
+                            "properties": {
+                                "secretKeyRef": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "key": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["name", "key"]
+                                }
+                            }
+                        },
+                        "privateKey": {
+                            "type": "object",
+                            "properties": {
+                                "secretKeyRef": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "key": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["name", "key"]
+                                }
+                            }
+                        }
+                    }
+                },
+                "scopes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "auth": {
+                    "type": "object",
+                    "properties": {
+                        "secretStore": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "required": ["baseUrl"]
+        }
+    },
+    "required": ["apiVersion", "kind", "metadata", "spec"]
+}

@@ -1,0 +1,160 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Resiliency",
+    "type": "object",
+    "properties": {
+        "apiVersion": {
+            "type": "string",
+            "enum": ["dapr.io/v1alpha1"]
+        },
+        "kind": {
+            "type": "string",
+            "enum": ["Resiliency"]
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": ["name"]
+        },
+        "version": {
+            "type": "string",
+            "enum": ["v1alpha1"]
+        },
+        "scopes": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "spec": {
+            "type": "object",
+            "properties": {
+                "policies": {
+                    "type": "object",
+                    "properties": {
+                        "timeouts": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        },
+                        "retries": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                    "policy": {
+                                        "type": "string"
+                                    },
+                                    "duration": {
+                                        "type": "string"
+                                    },
+                                    "maxInterval": {
+                                        "type": "string"
+                                    },
+                                    "maxRetries": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": ["policy", "duration", "maxInterval", "maxRetries"]
+                            }
+                        },
+                        "circuitBreakers": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                    "maxRequests": {
+                                        "type": "integer"
+                                    },
+                                    "timeout": {
+                                        "type": "string"
+                                    },
+                                    "trip": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": ["maxRequests", "timeout", "trip"]
+                            }
+                        }
+                    },
+                    "required": ["timeouts", "retries", "circuitBreakers"]
+                },
+                "targets": {
+                    "type": "object",
+                    "properties": {
+                        "apps": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                    "timeout": {
+                                        "type": "string"
+                                    },
+                                    "retry": {
+                                        "type": "string"
+                                    },
+                                    "circuitBreaker": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["timeout", "retry", "circuitBreaker"]
+                            }
+                        },
+                        "actors": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                    "timeout": {
+                                        "type": "string"
+                                    },
+                                    "retry": {
+                                        "type": "string"
+                                    },
+                                    "circuitBreaker": {
+                                        "type": "string"
+                                    },
+                                    "circuitBreakerCacheSize": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": ["timeout", "retry", "circuitBreaker"]
+                            }
+                        },
+                        "components": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                    "outbound": {
+                                        "type": "object",
+                                        "properties": {
+                                            "timeout": {
+                                                "type": "string"
+                                            },
+                                            "retry": {
+                                                "type": "string"
+                                            },
+                                            "circuitBreaker": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": ["timeout", "retry", "circuitBreaker"]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": ["apps", "actors", "components"]
+                }
+            },
+            "required": ["policies", "targets"]
+        }
+    },
+    "required": ["apiVersion", "kind", "metadata", "version", "spec"]
+}

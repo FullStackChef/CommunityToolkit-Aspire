@@ -1,0 +1,307 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Configuration",
+    "type": "object",
+    "properties": {
+        "apiVersion": {
+            "type": "string",
+            "enum": ["dapr.io/v1alpha1"]
+        },
+        "kind": {
+            "type": "string",
+            "enum": ["Configuration"]
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                }
+            },
+            "required": ["name"]
+        },
+        "spec": {
+            "type": "object",
+            "properties": {
+                "api": {
+                    "type": "object",
+                    "properties": {
+                        "allowed": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "version": {
+                                        "type": "string"
+                                    },
+                                    "protocol": {
+                                        "type": "string",
+                                        "enum": ["HTTP", "GRPC"]
+                                    }
+                                },
+                                "required": ["name", "version", "protocol"]
+                            }
+                        }
+                    }
+                },
+                "tracing": {
+                    "type": "object",
+                    "properties": {
+                        "samplingRate": {
+                            "type": "integer"
+                        },
+                        "stdout": {
+                            "type": "boolean"
+                        },
+                        "otel": {
+                            "type": "object",
+                            "properties": {
+                                "endpointAddress": {
+                                    "type": "string"
+                                },
+                                "isSecure": {
+                                    "type": "boolean"
+                                },
+                                "protocol": {
+                                    "type": "string",
+                                    "enum": ["HTTP", "GRPC"]
+                                }
+                            },
+                            "required": ["endpointAddress", "isSecure", "protocol"]
+                        }
+                    }
+                },
+                "metrics": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "rules": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "labels": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "regex": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "required": ["name"]
+                                        }
+                                    }
+                                },
+                                "required": ["name"]
+                            }
+                        },
+                        "latencyDistributionBuckets": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "http": {
+                            "type": "object",
+                            "properties": {
+                                "increasedCardinality": {
+                                    "type": "boolean"
+                                },
+                                "pathMatching": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "excludeVerbs": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                },
+                "httpPipeline": {
+                    "type": "object",
+                    "properties": {
+                        "handlers": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["name", "type"]
+                            }
+                        }
+                    }
+                },
+                "appHttpPipeline": {
+                    "type": "object",
+                    "properties": {
+                        "handlers": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["name", "type"]
+                            }
+                        }
+                    }
+                },
+                "nameResolution": {
+                    "type": "object",
+                    "properties": {
+                        "component": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        },
+                        "configuration": {
+                            "type": "object"
+                        }
+                    },
+                    "required": ["component", "version"]
+                },
+                "secrets": {
+                    "type": "object",
+                    "properties": {
+                        "scopes": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "storeName": {
+                                        "type": "string"
+                                    },
+                                    "defaultAccess": {
+                                        "type": "string",
+                                        "enum": ["ALLOW", "DENY"]
+                                    },
+                                    "deniedSecrets": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": ["storeName", "defaultAccess"]
+                            }
+                        }
+                    }
+                },
+                "components": {
+                    "type": "object",
+                    "properties": {
+                        "deny": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "accessControl": {
+                    "type": "object",
+                    "properties": {
+                        "defaultAction": {
+                            "type": "string",
+                            "enum": ["ALLOW", "DENY"]
+                        },
+                        "trustDomain": {
+                            "type": "string"
+                        },
+                        "policies": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "appId": {
+                                        "type": "string"
+                                    },
+                                    "defaultAction": {
+                                        "type": "string",
+                                        "enum": ["ALLOW", "DENY"]
+                                    },
+                                    "trustDomain": {
+                                        "type": "string"
+                                    },
+                                    "namespace": {
+                                        "type": "string"
+                                    },
+                                    "operations": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "httpVerb": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "action": {
+                                                    "type": "string",
+                                                    "enum": ["ALLOW", "DENY"]
+                                                }
+                                            },
+                                            "required": ["name", "httpVerb", "action"]
+                                        }
+                                    }
+                                },
+                                "required": ["appId", "defaultAction", "trustDomain", "namespace", "operations"]
+                            }
+                        }
+                    },
+                    "required": ["defaultAction", "trustDomain"]
+                }
+            }
+        },
+        "mtls": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "allowedClockSkew": {
+                    "type": "string"
+                },
+                "workloadCertTTL": {
+                    "type": "string"
+                }
+            },
+            "required": ["enabled"]
+        }
+    },
+    "required": ["apiVersion", "kind", "metadata", "spec"]
+}

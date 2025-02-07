@@ -1,0 +1,84 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Subscription",
+    "type": "object",
+    "properties": {
+        "apiVersion": {
+            "type": "string",
+            "enum": ["dapr.io/v2alpha1", "dapr.io/v1alpha1"]
+        },
+        "kind": {
+            "type": "string",
+            "enum": ["Subscription"]
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": ["name"]
+        },
+        "spec": {
+            "type": "object",
+            "properties": {
+                "topic": {
+                    "type": "string"
+                },
+                "routes": {
+                    "type": "object",
+                    "properties": {
+                        "rules": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "match": {
+                                        "type": "string"
+                                    },
+                                    "path": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["path"]
+                            }
+                        }
+                    },
+                    "required": ["rules"]
+                },
+                "route": {
+                    "type": "string"
+                },
+                "pubsubname": {
+                    "type": "string"
+                },
+                "deadLetterTopic": {
+                    "type": "string"
+                },
+                "bulkSubscribe": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "maxMessagesCount": {
+                            "type": "integer"
+                        },
+                        "maxAwaitDurationMs": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            },
+            "required": ["topic", "pubsubname"]
+        },
+        "scopes": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": ["apiVersion", "kind", "metadata", "spec"]
+}

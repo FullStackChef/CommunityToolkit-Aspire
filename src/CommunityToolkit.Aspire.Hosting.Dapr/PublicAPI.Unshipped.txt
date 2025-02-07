@@ -1,3 +1,8 @@
 #nullable enable
 CommunityToolkit.Aspire.Hosting.Dapr.DaprSidecarOptions.SchedulerHostAddress.get -> string?
 CommunityToolkit.Aspire.Hosting.Dapr.DaprSidecarOptions.SchedulerHostAddress.init -> void
+CommunityToolkit.Aspire.Hosting.Dapr.Models.DaprComponent
+CommunityToolkit.Aspire.Hosting.Dapr.Models.DaprConfiguration
+CommunityToolkit.Aspire.Hosting.Dapr.Models.DaprHttpEndpoints
+CommunityToolkit.Aspire.Hosting.Dapr.Models.DaprResiliency
+CommunityToolkit.Aspire.Hosting.Dapr.Models.DaprSubscription
