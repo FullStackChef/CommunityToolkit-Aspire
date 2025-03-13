@@ -8,6 +8,22 @@
 //------------------------------------------------------------------------------
 namespace Aspire.Hosting
 {
+    public static partial class AzureDaprHostingExtensions
+    {
+        public static ApplicationModel.IResourceBuilder<ApplicationModel.AzureDaprComponentResource> AddAzureDaprResource(this ApplicationModel.IResourceBuilder<ApplicationModel.AzureDaprComponentResource> builder, string name, System.Action<Azure.AzureResourceInfrastructure> configureInfrastructure) { throw null; }
+
+        public static ApplicationModel.IResourceBuilder<ApplicationModel.AzureDaprComponentResource> AddAzureDaprResource(this ApplicationModel.IResourceBuilder<CommunityToolkit.Aspire.Hosting.Dapr.IDaprComponentResource> builder, string name, System.Action<Azure.AzureResourceInfrastructure> configureInfrastructure) { throw null; }
+
+        public static global::Azure.Provisioning.AppContainers.ContainerAppManagedEnvironmentDaprComponent CreateDaprComponent(string bicepIdentifier, string componentType, string version) { throw null; }
+
+        public static System.Action<Azure.AzureResourceInfrastructure> GetInfrastructureConfigurationAction(global::Azure.Provisioning.AppContainers.ContainerAppManagedEnvironmentDaprComponent daprComponent, System.Collections.Generic.IEnumerable<global::Azure.Provisioning.ProvisioningParameter>? parameters = null) { throw null; }
+    }
+
+    public static partial class AzureKeyVaultDaprHostingExtensions
+    {
+        public static ApplicationModel.IResourceBuilder<ApplicationModel.AzureDaprComponentResource> ConfigureKeyVaultSecretsComponent(this ApplicationModel.IResourceBuilder<CommunityToolkit.Aspire.Hosting.Dapr.IDaprComponentResource> builder, global::Azure.Provisioning.ProvisioningParameter kvNameParam) { throw null; }
+    }
+
     public static partial class DaprMetadataResourceBuilderExtensions
     {
         public static ApplicationModel.IResourceBuilder<CommunityToolkit.Aspire.Hosting.Dapr.IDaprComponentResource> WithMetadata(this ApplicationModel.IResourceBuilder<CommunityToolkit.Aspire.Hosting.Dapr.IDaprComponentResource> builder, string name, ApplicationModel.ParameterResource parameterResource) { throw null; }
@@ -41,6 +57,14 @@ namespace Aspire.Hosting
 
         public static ApplicationModel.IResourceBuilder<TDestination> WithReference<TDestination>(this ApplicationModel.IResourceBuilder<TDestination> builder, ApplicationModel.IResourceBuilder<CommunityToolkit.Aspire.Hosting.Dapr.IDaprComponentResource> component)
             where TDestination : ApplicationModel.IResource { throw null; }
+    }
+}
+
+namespace Aspire.Hosting.ApplicationModel
+{
+    public partial class AzureDaprComponentResource : Azure.AzureProvisioningResource
+    {
+        public AzureDaprComponentResource(string bicepIdentifier, System.Action<Azure.AzureResourceInfrastructure> configureInfrastructure) : base(default!, default!) { }
     }
 }
 
