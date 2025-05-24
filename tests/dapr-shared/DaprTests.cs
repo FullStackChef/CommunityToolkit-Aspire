@@ -166,6 +166,58 @@ public class DaprTests
         Assert.NotNull(container.Annotations.OfType<DaprSidecarAnnotation>());
     }
 
+    [Fact]
+    public async Task WithDaprSidecar_InvalidRunFile_Throws()
+    {
+        using var builder = TestDistributedApplicationBuilder.Create();
+
+        builder.AddDapr(o =>
+        {
+            o.DaprPath = "dapr";
+        });
+
+        builder.AddContainer("name", "image")
+            .WithEndpoint("http", e =>
+            {
+                e.Port = 8000;
+                e.AllocatedEndpoint = new(e, "localhost", 80);
+            })
+            .WithDaprSidecar(new DaprSidecarOptions
+            {
+                RunFile = Guid.NewGuid().ToString("N")
+            });
+
+        using var app = builder.Build();
+
+        await Assert.ThrowsAsync<FileNotFoundException>(() => ExecuteBeforeStartHooksAsync(app, default));
+    }
+
+    [Fact]
+    public async Task WithDaprSidecar_InvalidRuntimePath_Throws()
+    {
+        using var builder = TestDistributedApplicationBuilder.Create();
+
+        builder.AddDapr(o =>
+        {
+            o.DaprPath = "dapr";
+        });
+
+        builder.AddContainer("name", "image")
+            .WithEndpoint("http", e =>
+            {
+                e.Port = 8000;
+                e.AllocatedEndpoint = new(e, "localhost", 80);
+            })
+            .WithDaprSidecar(new DaprSidecarOptions
+            {
+                RuntimePath = Guid.NewGuid().ToString("N")
+            });
+
+        using var app = builder.Build();
+
+        await Assert.ThrowsAsync<DirectoryNotFoundException>(() => ExecuteBeforeStartHooksAsync(app, default));
+    }
+
     [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "ExecuteBeforeStartHooksAsync")]
     private static extern Task ExecuteBeforeStartHooksAsync(DistributedApplication app, CancellationToken cancellationToken);
 }
