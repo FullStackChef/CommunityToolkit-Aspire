@@ -316,6 +316,21 @@ public class ResourceCreationTests
 
         Assert.Contains("Unsupported Dapr component type: pubsub", ex.Message);
     }
+
+    [Fact]
+    public void WithReference_WhenCustomComponentType_ThrowsException()
+    {
+        using var builder = TestDistributedApplicationBuilder.Create(DistributedApplicationOperation.Publish);
+
+        var redisState = builder.AddAzureRedis("redisState").RunAsContainer();
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+        {
+            var customComponent = builder.AddDaprComponent("custom", "bindings.redis")
+                .WithReference(redisState);
+        });
+
+        Assert.Contains("Unsupported Dapr component type: bindings.redis", ex.Message);
+    }
     public static string NormalizeLineEndings(string input)
     {
         return input.Replace("\r\n", "\n");
