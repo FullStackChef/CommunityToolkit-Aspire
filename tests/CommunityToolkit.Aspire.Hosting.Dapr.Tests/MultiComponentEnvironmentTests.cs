@@ -22,7 +22,10 @@ public class MultiComponentEnvironmentTests(AspireIntegrationTestFixture<Project
             await fixture.ResourceNotificationService.WaitForResourceHealthyAsync(serviceName).WaitAsync(TimeSpan.FromMinutes(5));
 
             var resource = Assert.Single(model.Resources, r => r.Name == serviceName);
-            var env = await ((IResourceWithEnvironment)resource).GetEnvironmentVariableValuesAsync(DistributedApplicationOperation.Run);
+            // Use the default execution context when retrieving environment variables
+            // to avoid accessing the service provider before the application has
+            // finished building.
+            var env = await ((IResourceWithEnvironment)resource).GetEnvironmentVariableValuesAsync();
 
             Assert.Contains("DAPR_HTTP_PORT", env.Keys);
             Assert.Contains("DAPR_GRPC_PORT", env.Keys);
