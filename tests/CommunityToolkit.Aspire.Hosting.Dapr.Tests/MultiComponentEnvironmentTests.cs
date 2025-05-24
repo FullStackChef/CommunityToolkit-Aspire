@@ -3,6 +3,7 @@ using CommunityToolkit.Aspire.Testing;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.DotNet.XUnitExtensions;
 
 namespace CommunityToolkit.Aspire.Hosting.Dapr.Tests;
 
@@ -14,18 +15,20 @@ public class MultiComponentEnvironmentTests(AspireIntegrationTestFixture<Project
     public async Task SidecarsExposeEnvironmentVariables()
     {
         string[] services = ["servicea", "serviceb", "servicec"];
+        foreach (var serviceName in services)
+        {
+            await fixture.ResourceNotificationService
+                .WaitForResourceHealthyAsync(serviceName)
+                .WaitAsync(TimeSpan.FromMinutes(5));
+        }
 
         var model = fixture.App.Services.GetRequiredService<DistributedApplicationModel>();
 
         foreach (var serviceName in services)
         {
-            await fixture.ResourceNotificationService.WaitForResourceHealthyAsync(serviceName).WaitAsync(TimeSpan.FromMinutes(5));
-
             var resource = Assert.Single(model.Resources, r => r.Name == serviceName);
-            // Use the default execution context when retrieving environment variables
-            // to avoid accessing the service provider before the application has
-            // finished building.
-            var env = await ((IResourceWithEnvironment)resource).GetEnvironmentVariableValuesAsync();
+            var env = await ((IResourceWithEnvironment)resource)
+                .GetEnvironmentVariableValuesAsync(DistributedApplicationOperation.Run);
 
             Assert.Contains("DAPR_HTTP_PORT", env.Keys);
             Assert.Contains("DAPR_GRPC_PORT", env.Keys);
