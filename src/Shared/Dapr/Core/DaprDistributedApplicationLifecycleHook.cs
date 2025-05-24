@@ -149,35 +149,12 @@ internal sealed class DaprDistributedApplicationLifecycleHook(
 #pragma warning restore CS0618 // Type or member is obsolete
 
             var daprCommandLine =
-                CommandLineBuilder
-                    .Create(
-                        fileName,
-                        Command("run"),
-                        daprAppPortArg(sidecarOptions?.AppPort),
-                        ModelNamedArg("--app-channel-address", sidecarOptions?.AppChannelAddress),
-                        ModelNamedArg("--app-health-check-path", sidecarOptions?.AppHealthCheckPath),
-                        ModelNamedArg("--app-health-probe-interval", sidecarOptions?.AppHealthProbeInterval),
-                        ModelNamedArg("--app-health-probe-timeout", sidecarOptions?.AppHealthProbeTimeout),
-                        ModelNamedArg("--app-health-threshold", sidecarOptions?.AppHealthThreshold),
-                        ModelNamedArg("--app-id", appId),
-                        ModelNamedArg("--app-max-concurrency", sidecarOptions?.AppMaxConcurrency),
-                        ModelNamedArg("--app-protocol", sidecarOptions?.AppProtocol),
-                        ModelNamedArg("--config", NormalizePath(sidecarOptions?.Config)),
-                        ModelNamedArg("--max-body-size", sidecarOptions?.DaprMaxBodySize),
-                        ModelNamedArg("--read-buffer-size", sidecarOptions?.DaprReadBufferSize),
-                        ModelNamedArg("--dapr-internal-grpc-port", sidecarOptions?.DaprInternalGrpcPort),
-                        ModelNamedArg("--dapr-listen-addresses", sidecarOptions?.DaprListenAddresses),
-                        Flag("--enable-api-logging", sidecarOptions?.EnableApiLogging),
-                        Flag("--enable-app-health-check", sidecarOptions?.EnableAppHealthCheck),
-                        Flag("--enable-profiling", sidecarOptions?.EnableProfiling),
-                        ModelNamedArg("--log-level", sidecarOptions?.LogLevel),
-                        ModelNamedArg("--placement-host-address", sidecarOptions?.PlacementHostAddress),
-                        ModelNamedArg("--resources-path", aggregateResourcesPaths),
-                        ModelNamedArg("--run-file", NormalizePath(sidecarOptions?.RunFile)),
-                        ModelNamedArg("--runtime-path", NormalizePath(sidecarOptions?.RuntimePath)),
-                        ModelNamedArg("--scheduler-host-address", sidecarOptions?.SchedulerHostAddress),
-                        ModelNamedArg("--unix-domain-socket", sidecarOptions?.UnixDomainSocket),
-                        PostOptionsArgs(Args(sidecarOptions?.Command)));
+                DaprSidecarCommandLineBuilder.Create(
+                    fileName,
+                    sidecarOptions,
+                    aggregateResourcesPaths,
+                    appId,
+                    NormalizePath);
 
             var daprCliResourceName = $"{daprSidecar.Name}-cli";
             var daprCli = new ExecutableResource(daprCliResourceName, fileName, appHostDirectory);
