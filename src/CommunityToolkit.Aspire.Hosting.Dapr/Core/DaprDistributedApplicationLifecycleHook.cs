@@ -55,6 +55,31 @@ internal sealed class DaprDistributedApplicationLifecycleHook(
 
             var sidecarOptions = sidecarOptionsAnnotation?.Options;
 
+            void ValidatePaths(DaprSidecarOptions? options)
+            {
+                if (options?.RunFile is string runFile)
+                {
+                    string runFilePath = Path.GetFullPath(Path.Combine(appHostDirectory, runFile));
+
+                    if (!File.Exists(runFilePath))
+                    {
+                        throw new FileNotFoundException($"The run file '{runFile}' could not be found.");
+                    }
+                }
+
+                if (options?.RuntimePath is string runtimePath)
+                {
+                    string runtimeDirectory = Path.GetFullPath(Path.Combine(appHostDirectory, runtimePath));
+
+                    if (!Directory.Exists(runtimeDirectory))
+                    {
+                        throw new DirectoryNotFoundException($"The runtime path '{runtimePath}' could not be found.");
+                    }
+                }
+            }
+
+            ValidatePaths(sidecarOptions);
+
             [return: NotNullIfNotNull(nameof(path))]
             string? NormalizePath(string? path)
             {
