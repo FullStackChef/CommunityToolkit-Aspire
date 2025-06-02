@@ -7,11 +7,6 @@
 
   
 
-<ItemGroup>
-  <Compile Include="$(SharedDir)\Dapr\Core\*.cs">
-    <Link>%(Filename)%(Extension)</Link>
-  </Compile>
-</ItemGroup>
 
 
   <ItemGroup>
@@ -26,5 +21,9 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="CommunityToolkit.Aspire.Hosting.Azure.Dapr.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../CommunityToolkit.Aspire.Hosting.Dapr/CommunityToolkit.Aspire.Hosting.Dapr.csproj" />
   </ItemGroup>
 </Project>
