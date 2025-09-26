@@ -12,6 +12,9 @@ nuget
 .pnpm-store
 .DS_Store
 .idea
+/tmp/
+/home/runner/.nuget/
+/home/runner/.local/
 
 *.binlog
 /examples/rust/actix_api/target

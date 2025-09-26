@@ -86,7 +86,7 @@ public static class AzureCosmosDbDaprHostingExtensions
                 var metadata = new List<ContainerAppDaprMetadata>
                 {
                     new() { Name = "url", Value = cosmosUrlParam },
-                    new() { Name = "database", Value = cosmosDbBuilder.Resource.DatabaseName ?? cosmosDbBuilder.Resource.Name },
+                    new() { Name = "database", Value = cosmosDbBuilder.Resource.Name },
                     new() { Name = "collection", Value = "statestore" }, // Default collection name for state store
                     new() { Name = "actorStateStore", Value = "true" }
                 };
@@ -145,7 +145,7 @@ public static class AzureCosmosDbDaprHostingExtensions
                 var metadata = new List<ContainerAppDaprMetadata>
                 {
                     new() { Name = "url", Value = cosmosUrlParam },
-                    new() { Name = "database", Value = cosmosDbBuilder.Resource.DatabaseName ?? cosmosDbBuilder.Resource.Name },
+                    new() { Name = "database", Value = cosmosDbBuilder.Resource.Name },
                     new() { Name = "collection", Value = "statestore" }, // Default collection name for state store
                     new() { Name = "masterKey", SecretRef = "cosmos-master-key" },
                     new() { Name = "actorStateStore", Value = "true" }
