@@ -12,6 +12,9 @@ echo Install JS monorepo tools
 npm install -g turbo
 npm install -g nx
 
+echo Install Apire cli
+curl -sSL https://aspire.dev/install.sh | bash -s -- -q dev
+
 echo Install Aspire 9 templates
 dotnet new install Aspire.ProjectTemplates
 

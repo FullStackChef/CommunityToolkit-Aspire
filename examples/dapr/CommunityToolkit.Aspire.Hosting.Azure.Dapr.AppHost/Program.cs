@@ -18,8 +18,9 @@ var pubSub = builder.AddDaprPubSub("pubsub")
 
 builder.AddProject<Projects.CommunityToolkit_Aspire_Hosting_Dapr_ServiceA>("servicea")
        .WithReference(redis)
-       .PublishAsAzureContainerApp((i,c)=> { })
+       .PublishAsAzureContainerApp((i, c) => { })
        .WithDaprSidecar(sidecar => sidecar.WithReference(stateStore).WithReference(pubSub))
+       .WithExternalHttpEndpoints()
        .WaitFor(redis);
 
 builder.AddProject<Projects.CommunityToolkit_Aspire_Hosting_Dapr_ServiceB>("serviceb")

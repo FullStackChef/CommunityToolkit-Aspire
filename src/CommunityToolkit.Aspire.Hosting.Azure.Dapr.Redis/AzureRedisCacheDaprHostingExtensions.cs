@@ -131,7 +131,7 @@ public static class AzureRedisCacheDaprHostingExtensions
 
                         infrastructure.Add(new RedisCacheAccessPolicyAssignment($"{redisBicepIdentifier}_contributor")
                         {
-                            Name = BicepFunction.CreateGuid(redis.Id, daprIdentity.PrincipalId, "Data Contributor"),
+                            Name = BicepFunction.CreateGuid(redis.Id, daprIdentity.Id, "Data Contributor"),
                             Parent = redis,
                             AccessPolicyName = "Data Contributor",
                             ObjectId = daprIdentity.PrincipalId,
@@ -154,7 +154,7 @@ public static class AzureRedisCacheDaprHostingExtensions
         };
 
 
-        //builder.WithRoleAssignments(redisBuilder, RedisBuiltInRole.GetBuiltInRoleName, [RedisBuiltInRole.RedisCacheContributor]);
+        builder.WithRoleAssignments(redisBuilder, RedisBuiltInRole.GetBuiltInRoleName, [RedisBuiltInRole.RedisCacheContributor]);
         builder.WithAnnotation(new AzureDaprComponentPublishingAnnotation(configureInfrastructure));
 
         // Configure the Redis resource to output the connection string
@@ -229,7 +229,7 @@ public static class AzureRedisCacheDaprHostingExtensions
         // Configure the Redis resource to output the connection string and set up Key Vault secret
         redisBuilder.ConfigureInfrastructure(infrastructure =>
         {
-            var redisResource = infrastructure.GetProvisionableResources().OfType<AzureRedisResource>().SingleOrDefault();
+            var redisResource = infrastructure.GetProvisionableResources().OfType<CdkRedisResource>().SingleOrDefault();
             if (redisResource is not null)
             {
                 var keyVault = infrastructure.GetProvisionableResources().OfType<KeyVaultService>().SingleOrDefault();

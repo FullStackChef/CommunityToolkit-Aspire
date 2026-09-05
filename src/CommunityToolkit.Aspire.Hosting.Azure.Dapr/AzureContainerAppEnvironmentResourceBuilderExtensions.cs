@@ -67,6 +67,9 @@ public static class AzureContainerAppEnvironmentResourceBuilderExtensions
 
             var daprComponentResources = builder.ApplicationBuilder.Resources.OfType<IDaprComponentResource>();
 
+            // Keep track of role assignments we've already created to avoid duplicates
+            var addedRoleAssignments = new HashSet<string>();
+
             foreach (var daprComponentResource in daprComponentResources)
             {
                 if (daprComponentResource.TryGetLastAnnotation<RoleAssignmentAnnotation>(out var roleAssignmentAnnotation))
@@ -75,24 +78,44 @@ public static class AzureContainerAppEnvironmentResourceBuilderExtensions
 
                     foreach (var roleDefinition in roleAssignmentAnnotation.Roles)
                     {
-                        var id = new MemberExpression(new IdentifierExpression(roleAssignmentAnnotation.Target.GetBicepIdentifier()), "id");
-                        var roleAssignment = new RoleAssignment($"{daprComponentResource.Name}{roleDefinition.Name}")
+                        // Create a unique key to check if we've already added this role assignment
+                        var roleAssignmentKey = $"{roleAssignmentAnnotation.Target.GetBicepIdentifier()}_{roleDefinition.Id}";
+                        
+                        if (!addedRoleAssignments.Contains(roleAssignmentKey))
                         {
-                            Name = BicepFunction.CreateGuid(id, daprIdentity.Id, BicepFunction.GetSubscriptionResourceId("Microsoft.Authorization/roleDefinitions", roleDefinition.Id)),
-                            RoleDefinitionId = BicepFunction.GetSubscriptionResourceId("Microsoft.Authorization/roleDefinitions", roleDefinition.Id),
-                            PrincipalId = daprIdentity.PrincipalId,
-                            PrincipalType = RoleManagementPrincipalType.ServicePrincipal,
-                            Scope =  new IdentifierExpression(target.BicepIdentifier)
-                        };
+                            var id = new MemberExpression(new IdentifierExpression(roleAssignmentAnnotation.Target.GetBicepIdentifier()), "id");
+                            var roleAssignment = new RoleAssignment($"daprManagedIdentity_{roleAssignmentAnnotation.Target.GetBicepIdentifier()}_{roleDefinition.Name}")
+                            {
+                                Name = BicepFunction.CreateGuid(id, daprIdentity.Id, BicepFunction.GetSubscriptionResourceId("Microsoft.Authorization/roleDefinitions", roleDefinition.Id)),
+                                RoleDefinitionId = BicepFunction.GetSubscriptionResourceId("Microsoft.Authorization/roleDefinitions", roleDefinition.Id),
+                                PrincipalId = daprIdentity.PrincipalId,
+                                PrincipalType = RoleManagementPrincipalType.ServicePrincipal,
+                                Scope = new IdentifierExpression(target.BicepIdentifier)
+                            };
 
-                        infrastructure.Add(roleAssignment);
+                            infrastructure.Add(roleAssignment);
+                            addedRoleAssignments.Add(roleAssignmentKey);
+                        }
                     }
                 }
 
                 daprComponentResource.TryGetLastAnnotation<AzureDaprComponentPublishingAnnotation>(out var publishingAnnotation);
                 publishingAnnotation?.PublishingAction(infrastructure, daprIdentity);
-
             }
         });
     }
 }
+
+/// <summary>
+/// Represents role definitions for Azure RBAC.
+/// </summary>
+/// <param name="Id">The role definition ID.</param>
+/// <param name="Name">The role definition name.</param>
+internal record RoleDefinition(string Id, string Name);
+
+/// <summary>
+/// Annotation that specifies role assignments for a resource.
+/// </summary>
+/// <param name="Target">The target Azure resource to receive role assignments.</param>
+/// <param name="Roles">The collection of roles to assign.</param>
+internal record RoleAssignmentAnnotation(AzureProvisioningResource Target, HashSet<RoleDefinition> Roles) : IResourceAnnotation;
